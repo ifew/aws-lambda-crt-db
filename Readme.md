@@ -1,6 +1,6 @@
 # aws-lambda-crt-example
 
-Example C# though Custom Runtime (.Net Core 2.2) working with AWS Lambda Function
+Example C# though Custom Runtime (.Net Core 2.2) working with AWS Lambda Function and MySQL
 
 ## This code to show about
 - Example custom runtime
