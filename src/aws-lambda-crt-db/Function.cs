@@ -12,7 +12,7 @@ namespace aws_lambda_crt_db
 {
     public class Function
     {
-        private static ServiceProvider _service;
+        private ServiceProvider _service;
 
         public Function() : this (Bootstrap.CreateInstance()) {}
 
@@ -34,8 +34,8 @@ namespace aws_lambda_crt_db
         
         public static List<DistrictModel> FunctionHandler(ILambdaContext context)
         {
-            ServiceProvider sv = Bootstrap.CreateInstance();
-            Services service = sv.GetService<Services>();
+            Function fn = new Function();
+            Services service = fn._service.GetService<Services>();
             List<DistrictModel> districts = service.List_district();
 
             return districts;

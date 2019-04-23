@@ -14,61 +14,6 @@ namespace aws_lambda_crt_db.Tests
 {
     public class FunctionTest
     {
-        
-        [Fact]
-        public void TestListDistrict()
-        {
-            var _options = new DbContextOptionsBuilder<DistrictContext>().UseInMemoryDatabase("district").Options;
-            var _context = new DistrictContext(_options);
-
-            _context.Districts.Add(
-                new DistrictModel { 
-                        DistrictId = 1,
-                        Code = 1,
-                        TitleEng = "Bangkok",
-                        TitleTha = "กรุงเทพมหานครฯ",
-                        ProvinceId = 1
-                    });
-            _context.Districts.Add(
-                new DistrictModel { 
-                        DistrictId = 2,
-                        Code = 2,
-                        TitleEng = "Chiang Mai",
-                        TitleTha = "เชียงใหม่",
-                        ProvinceId = 2
-                    });
-            _context.SaveChanges();
-
-            List<DistrictModel> expected = new List<DistrictModel> { 
-                    new DistrictModel { 
-                        DistrictId = 1,
-                        Code = 1,
-                        TitleEng = "Bangkok",
-                        TitleTha = "กรุงเทพมหานครฯ",
-                        ProvinceId = 1
-                    },
-                    new DistrictModel { 
-                        DistrictId = 2,
-                        Code = 2,
-                        TitleEng = "Chiang Mai",
-                        TitleTha = "เชียงใหม่",
-                        ProvinceId = 2
-                    }
-                };
-
-            var context = new TestLambdaContext();
-            List<DistrictModel> result = Function.FunctionHandler(context);
-
-            Assert.Equal(expected.Count, result.Count);
-            Assert.Equal(expected[0].TitleEng, result[0].TitleEng);
-            Assert.Equal(expected[1].TitleEng, result[1].TitleEng);
-            Assert.Equal(expected[0].TitleTha, result[0].TitleTha);
-            Assert.Equal(expected[1].TitleTha, result[1].TitleTha);
-            Assert.Equal(expected[0].Code, result[0].Code);
-            Assert.Equal(expected[1].Code, result[1].Code);
-            Assert.Equal(expected[0].ProvinceId, result[0].ProvinceId);
-            Assert.Equal(expected[1].ProvinceId, result[1].ProvinceId);
-        }
 
         [Fact]
         public void TestServiceGetListDistrict()
