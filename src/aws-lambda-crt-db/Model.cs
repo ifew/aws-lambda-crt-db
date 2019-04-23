@@ -9,6 +9,7 @@ namespace aws_lambda_crt_db
     [Table("district")]
     public class DistrictModel
     {
+        [Key]
         [Column("district_id")]
         public int DistrictId { get; set; }
 

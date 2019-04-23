@@ -8,31 +8,121 @@ using Amazon.Lambda.Core;
 using Amazon.Lambda.TestUtilities;
 
 using aws_lambda_crt_db;
+using Microsoft.EntityFrameworkCore;
 
 namespace aws_lambda_crt_db.Tests
 {
     public class FunctionTest
     {
+        
         [Fact]
-        public void TestInputName()
+        public void TestListDistrict()
         {
-            DistrictModel expected = new DistrictModel { 
-                    DistrictId = 1,
-                    Code = 222,
-                    TitleEng = "test",
-                    TitleTha = "ทดสอบ",
-                    ProvinceId = 333
+            var _options = new DbContextOptionsBuilder<DistrictContext>().UseInMemoryDatabase("district").Options;
+            var _context = new DistrictContext(_options);
+
+            _context.Districts.Add(
+                new DistrictModel { 
+                        DistrictId = 1,
+                        Code = 1,
+                        TitleEng = "Bangkok",
+                        TitleTha = "กรุงเทพมหานครฯ",
+                        ProvinceId = 1
+                    });
+            _context.Districts.Add(
+                new DistrictModel { 
+                        DistrictId = 2,
+                        Code = 2,
+                        TitleEng = "Chiang Mai",
+                        TitleTha = "เชียงใหม่",
+                        ProvinceId = 2
+                    });
+            _context.SaveChanges();
+
+            List<DistrictModel> expected = new List<DistrictModel> { 
+                    new DistrictModel { 
+                        DistrictId = 1,
+                        Code = 1,
+                        TitleEng = "Bangkok",
+                        TitleTha = "กรุงเทพมหานครฯ",
+                        ProvinceId = 1
+                    },
+                    new DistrictModel { 
+                        DistrictId = 2,
+                        Code = 2,
+                        TitleEng = "Chiang Mai",
+                        TitleTha = "เชียงใหม่",
+                        ProvinceId = 2
+                    }
                 };
 
-            // Invoke the lambda function and confirm the string was upper cased.
             var context = new TestLambdaContext();
-            List<DistrictModel> result = Function.FunctionHandler("hello world", context);
+            List<DistrictModel> result = Function.FunctionHandler(context);
 
-            // Assert.Equal(expected.DistrictId, result.DistrictId);
-            // Assert.Equal(expected.Code, result.Code);
-            // Assert.Equal(expected.TitleEng, result.TitleEng);
-            // Assert.Equal(expected.TitleTha, result.TitleTha);
-            // Assert.Equal(expected.ProvinceId, result.ProvinceId);
+            Assert.Equal(expected.Count, result.Count);
+            Assert.Equal(expected[0].TitleEng, result[0].TitleEng);
+            Assert.Equal(expected[1].TitleEng, result[1].TitleEng);
+            Assert.Equal(expected[0].TitleTha, result[0].TitleTha);
+            Assert.Equal(expected[1].TitleTha, result[1].TitleTha);
+            Assert.Equal(expected[0].Code, result[0].Code);
+            Assert.Equal(expected[1].Code, result[1].Code);
+            Assert.Equal(expected[0].ProvinceId, result[0].ProvinceId);
+            Assert.Equal(expected[1].ProvinceId, result[1].ProvinceId);
+        }
+
+        [Fact]
+        public void TestServiceGetListDistrict()
+        {
+            var _options = new DbContextOptionsBuilder<DistrictContext>().UseInMemoryDatabase("district_service").Options;
+            var _context = new DistrictContext(_options);
+
+            _context.Districts.Add(
+                new DistrictModel { 
+                        DistrictId = 1,
+                        Code = 1,
+                        TitleEng = "Bangkok",
+                        TitleTha = "กรุงเทพมหานครฯ",
+                        ProvinceId = 1
+                    });
+            _context.Districts.Add(
+                new DistrictModel { 
+                        DistrictId = 2,
+                        Code = 2,
+                        TitleEng = "Chiang Mai",
+                        TitleTha = "เชียงใหม่",
+                        ProvinceId = 2
+                    });
+            _context.SaveChanges();
+
+            List<DistrictModel> expected = new List<DistrictModel> { 
+                    new DistrictModel { 
+                        DistrictId = 1,
+                        Code = 1,
+                        TitleEng = "Bangkok",
+                        TitleTha = "กรุงเทพมหานครฯ",
+                        ProvinceId = 1
+                    },
+                    new DistrictModel { 
+                        DistrictId = 2,
+                        Code = 2,
+                        TitleEng = "Chiang Mai",
+                        TitleTha = "เชียงใหม่",
+                        ProvinceId = 2
+                    }
+                };
+
+            Services _service = new Services(_context);
+            List<DistrictModel> result = _service.List_district();
+
+            Assert.Equal(expected.Count, result.Count);
+            Assert.Equal(expected[0].TitleEng, result[0].TitleEng);
+            Assert.Equal(expected[1].TitleEng, result[1].TitleEng);
+            Assert.Equal(expected[0].TitleTha, result[0].TitleTha);
+            Assert.Equal(expected[1].TitleTha, result[1].TitleTha);
+            Assert.Equal(expected[0].Code, result[0].Code);
+            Assert.Equal(expected[1].Code, result[1].Code);
+            Assert.Equal(expected[0].ProvinceId, result[0].ProvinceId);
+            Assert.Equal(expected[1].ProvinceId, result[1].ProvinceId);
         }
     }
 }

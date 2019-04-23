@@ -5,7 +5,6 @@ namespace aws_lambda_crt_db
 {
     public class Bootstrap
     {
-
         public static ServiceProvider CreateInstance()
         {
             return new ServiceCollection()
