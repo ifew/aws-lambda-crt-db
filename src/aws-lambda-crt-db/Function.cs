@@ -1,28 +1,21 @@
-using Amazon.Lambda.APIGatewayEvents;
 using Amazon.Lambda.Core;
 using Amazon.Lambda.RuntimeSupport;
 using Amazon.Lambda.Serialization.Json;
-using Microsoft.Extensions.DependencyInjection;
+using Dapper;
+using MySql.Data.MySqlClient;
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace aws_lambda_crt_db
 {
     public class Function
     {
-        private ServiceProvider _service;
-
-        public Function() : this (Bootstrap.CreateInstance()) {}
-
-        public Function(ServiceProvider service)
-        {
-            _service = service;
-        }
         private static async Task Main(string[] args)
 		{
-            Func<ILambdaContext, List<DistrictModel>> func = FunctionHandler;
+            Func<ILambdaContext, Task<List<DistrictModel>>> func = FunctionHandler;
 			using(var handlerWrapper = HandlerWrapper.GetHandlerWrapper(func, new JsonSerializer()))
 			{
 				using(var lambdaBootstrap = new LambdaBootstrap(handlerWrapper))
@@ -31,14 +24,19 @@ namespace aws_lambda_crt_db
 				}
 			}
 		}
-        
-        public static List<DistrictModel> FunctionHandler(ILambdaContext context)
-        {
-            Function fn = new Function();
-            Services service = fn._service.GetService<Services>();
-            List<DistrictModel> districts = service.List_district();
 
-            return districts;
+        public static async Task<List<DistrictModel>> FunctionHandler(ILambdaContext context)
+        {
+            using (MySqlConnection _connection = new MySqlConnection(LambdaConfiguration.Instance["DB_CONNECTION"].ToString()))  
+            {  
+                if (_connection.State == ConnectionState.Closed)  
+                    _connection.Open();  
+  
+                string sqlQuery = "SELECT * FROM district";
+                var result = await _connection.QueryAsync<DistrictModel>(sqlQuery);
+
+                return result.ToList();  
+            } 
         }
     }
 }
