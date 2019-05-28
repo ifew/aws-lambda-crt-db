@@ -4,4 +4,4 @@ RUNTIME=$1
 echo $1
 dotnet restore
 dotnet publish -r $RUNTIME -c Release
-bin/Release/netcoreapp2.2/$RUNTIME/publish/aws-lambda-crt-db
+bin/Release/netcoreapp3.0/$RUNTIME/publish/aws-lambda-crt-db
