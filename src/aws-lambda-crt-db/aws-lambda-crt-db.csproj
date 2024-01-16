@@ -17,6 +17,6 @@
     <PackageReference Include="Amazon.Lambda.Serialization.Json" Version="1.5.0" />
 
     <PackageReference Include="MySqlConnector" Version="0.53.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.7.0-preview4.19212.13" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
   </ItemGroup>
 </Project>
